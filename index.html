@@ -3,104 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfólio — Dev TI</title>
+  <title id="pageTitle">Portfólio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="config.js"></script>
 </head>
 <body>
 
-  <!-- ───── CURSOR PERSONALIZADO ───── -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-trail" id="cursorTrail"></div>
 
-  <!-- ───── NAVBAR ───── -->
+  <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
     <div class="nav-logo">
       <span class="logo-bracket">&lt;</span>
-      <span class="logo-name" id="navName">Dev</span>
+      <span class="logo-name" id="navName"></span>
       <span class="logo-bracket">/&gt;</span>
     </div>
     <ul class="nav-links">
-      <li><a href="#hero" class="nav-link">Início</a></li>
-      <li><a href="#skills" class="nav-link">Habilidades</a></li>
-      <li><a href="#projects" class="nav-link">Projetos</a></li>
-      <li><a href="#goals" class="nav-link">Objetivos</a></li>
+      <li><a href="#hero"           class="nav-link">Início</a></li>
+      <li><a href="#skills"         class="nav-link">Habilidades</a></li>
+      <li><a href="#projects"       class="nav-link">Projetos</a></li>
+      <li><a href="#goals"          class="nav-link">Objetivos</a></li>
       <li><a href="#certifications" class="nav-link">Certificações</a></li>
-      <li><a href="#contact" class="nav-link nav-cta">Contato</a></li>
+      <li><a href="#contact"        class="nav-link nav-cta">Contato</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- ───── HERO ───── -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-bg-grid"></div>
     <div class="hero-orb hero-orb-1"></div>
     <div class="hero-orb hero-orb-2"></div>
     <div class="hero-orb hero-orb-3"></div>
-
     <div class="hero-content">
-      <!-- PROFILE CARD -->
+
       <div class="profile-card" id="profileCard">
-        <div class="profile-banner">
-          <div class="banner-pattern"></div>
-        </div>
+        <div class="profile-banner"><div class="banner-pattern"></div></div>
         <div class="profile-avatar-wrap">
           <div class="avatar-ring">
-            <div class="avatar-inner" id="avatarInner">
-              <img id="avatarImg" src="" alt="Foto de perfil" style="display:none;" />
-              <div class="avatar-placeholder" id="avatarPlaceholder">
-                <svg viewBox="0 0 80 80" fill="none">
-                  <circle cx="40" cy="30" r="18" fill="#1e40af" opacity=".7"/>
-                  <ellipse cx="40" cy="72" rx="28" ry="18" fill="#1e40af" opacity=".5"/>
-                </svg>
-              </div>
-              <label class="avatar-upload-btn" for="avatarInput" title="Alterar foto">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-              </label>
-              <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
-            </div>
+            <div class="avatar-inner" id="avatarInner"></div>
           </div>
           <div class="status-badge">
-            <span class="status-dot"></span> Disponível para projetos
+            <span class="status-dot"></span>
+            <span id="profileStatus"></span>
           </div>
         </div>
         <div class="profile-info">
-          <h1 class="profile-name" contenteditable="true" id="profileName">Seu Nome Aqui</h1>
-          <p class="profile-title" contenteditable="true">Desenvolvedor Full Stack · Especialista em TI</p>
-          <p class="profile-location">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Brasil · Remoto
+          <h1 class="profile-name"  id="profileName"></h1>
+          <p  class="profile-title" id="profileTitle"></p>
+          <p  class="profile-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span id="profileLocation"></span>
           </p>
           <div class="profile-stats">
-            <div class="stat"><span class="stat-num" id="statProjects">12</span><span class="stat-label">Projetos</span></div>
+            <div class="stat"><span class="stat-num" id="statProjects"></span><span class="stat-label">Projetos</span></div>
             <div class="stat-divider"></div>
-            <div class="stat"><span class="stat-num" id="statCerts">8</span><span class="stat-label">Certificações</span></div>
+            <div class="stat"><span class="stat-num" id="statCerts"></span><span class="stat-label">Certificações</span></div>
             <div class="stat-divider"></div>
-            <div class="stat"><span class="stat-num" id="statYears">4</span><span class="stat-label">Anos Exp.</span></div>
+            <div class="stat"><span class="stat-num" id="statYears"></span><span class="stat-label">Anos Exp.</span></div>
           </div>
         </div>
       </div>
 
-      <!-- HERO TEXT -->
       <div class="hero-text">
-        <div class="hero-tag">
-          <span class="tag-dot"></span>
-          Portfólio Profissional
-        </div>
-        <h2 class="hero-headline">
-          Transformando <em>ideias</em><br/>em soluções digitais
-        </h2>
-        <p class="hero-sub">
-          Apaixonado por tecnologia, desenvolvimento de software e inovação. Construindo o futuro linha por linha.
-        </p>
+        <div class="hero-tag"><span class="tag-dot"></span>Portfólio Profissional</div>
+        <h2 class="hero-headline" id="heroHeadline"></h2>
+        <p  class="hero-sub"      id="heroSub"></p>
         <div class="hero-actions">
           <a href="#projects" class="btn btn-primary">
             <span>Ver Projetos</span>
@@ -108,28 +85,18 @@
           </a>
           <a href="#contact" class="btn btn-ghost">Entre em contato</a>
         </div>
-
         <div class="tech-ticker">
-          <div class="ticker-track">
-            <span>JavaScript</span><span>·</span><span>Python</span><span>·</span>
-            <span>React</span><span>·</span><span>Node.js</span><span>·</span>
-            <span>Docker</span><span>·</span><span>AWS</span><span>·</span>
-            <span>TypeScript</span><span>·</span><span>SQL</span><span>·</span>
-            <span>Git</span><span>·</span><span>Linux</span><span>·</span>
-            <span>JavaScript</span><span>·</span><span>Python</span><span>·</span>
-            <span>React</span><span>·</span><span>Node.js</span>
-          </div>
+          <div class="ticker-track" id="tickerTrack"></div>
         </div>
       </div>
     </div>
-
     <div class="scroll-hint">
       <div class="scroll-line"></div>
       <span>scroll</span>
     </div>
   </section>
 
-  <!-- ───── HABILIDADES ───── -->
+  <!-- HABILIDADES -->
   <section class="section" id="skills">
     <div class="container">
       <div class="section-header">
@@ -137,113 +104,11 @@
         <h2 class="section-title">Stack Técnica</h2>
         <p class="section-desc">Tecnologias e ferramentas com as quais trabalho no dia a dia.</p>
       </div>
-
-      <div class="skills-grid">
-        <!-- Card de categoria -->
-        <div class="skill-category" data-delay="0">
-          <div class="skill-cat-icon">⚡</div>
-          <h3>Frontend</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">HTML5</span>
-            <span class="skill-tag">CSS3</span>
-            <span class="skill-tag">JavaScript</span>
-            <span class="skill-tag">TypeScript</span>
-            <span class="skill-tag">React</span>
-            <span class="skill-tag">Next.js</span>
-            <span class="skill-tag">Tailwind</span>
-          </div>
-          <div class="skill-bar-group">
-            <div class="skill-bar-item">
-              <span>React</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="88%"></div></div>
-              <span>88%</span>
-            </div>
-            <div class="skill-bar-item">
-              <span>TypeScript</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="80%"></div></div>
-              <span>80%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="skill-category" data-delay="100">
-          <div class="skill-cat-icon">🛠️</div>
-          <h3>Backend</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">Node.js</span>
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">FastAPI</span>
-            <span class="skill-tag">REST API</span>
-            <span class="skill-tag">GraphQL</span>
-            <span class="skill-tag">Express</span>
-          </div>
-          <div class="skill-bar-group">
-            <div class="skill-bar-item">
-              <span>Node.js</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="85%"></div></div>
-              <span>85%</span>
-            </div>
-            <div class="skill-bar-item">
-              <span>Python</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="78%"></div></div>
-              <span>78%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="skill-category" data-delay="200">
-          <div class="skill-cat-icon">☁️</div>
-          <h3>Cloud & DevOps</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">AWS</span>
-            <span class="skill-tag">Docker</span>
-            <span class="skill-tag">Git</span>
-            <span class="skill-tag">CI/CD</span>
-            <span class="skill-tag">Linux</span>
-            <span class="skill-tag">Vercel</span>
-          </div>
-          <div class="skill-bar-group">
-            <div class="skill-bar-item">
-              <span>Docker</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="75%"></div></div>
-              <span>75%</span>
-            </div>
-            <div class="skill-bar-item">
-              <span>AWS</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="70%"></div></div>
-              <span>70%</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="skill-category" data-delay="300">
-          <div class="skill-cat-icon">🗄️</div>
-          <h3>Banco de Dados</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">PostgreSQL</span>
-            <span class="skill-tag">MySQL</span>
-            <span class="skill-tag">MongoDB</span>
-            <span class="skill-tag">Redis</span>
-            <span class="skill-tag">Prisma</span>
-          </div>
-          <div class="skill-bar-group">
-            <div class="skill-bar-item">
-              <span>PostgreSQL</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="82%"></div></div>
-              <span>82%</span>
-            </div>
-            <div class="skill-bar-item">
-              <span>MongoDB</span>
-              <div class="skill-bar"><div class="skill-fill" data-width="72%"></div></div>
-              <span>72%</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="skills-grid" id="skillsGrid"></div>
     </div>
   </section>
 
-  <!-- ───── PROJETOS ───── -->
+  <!-- PROJETOS -->
   <section class="section section-dark" id="projects">
     <div class="container">
       <div class="section-header">
@@ -251,93 +116,9 @@
         <h2 class="section-title">GitHub Projects</h2>
         <p class="section-desc">Alguns dos projetos que desenvolvi. Clique para ver no GitHub.</p>
       </div>
-
-      <div class="projects-grid">
-
-        <article class="project-card featured" data-delay="0">
-          <div class="project-card-inner">
-            <div class="project-lang-dot" style="--clr:#f7df1e"></div>
-            <div class="project-header">
-              <div class="project-icon">📦</div>
-              <div class="project-links">
-                <a href="https://github.com/seu-usuario/projeto-1" target="_blank" class="icon-link" title="GitHub">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-                <a href="#" target="_blank" class="icon-link" title="Live Demo">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                </a>
-              </div>
-            </div>
-            <h3 class="project-title">Nome do Projeto Principal</h3>
-            <p class="project-desc">Descreva aqui o que esse projeto faz, qual problema resolve e quais tecnologias foram utilizadas. Seja objetivo e impactante.</p>
-            <div class="project-tech">
-              <span>React</span><span>Node.js</span><span>PostgreSQL</span>
-            </div>
-            <div class="project-badge">⭐ Destaque</div>
-          </div>
-        </article>
-
-        <article class="project-card" data-delay="100">
-          <div class="project-card-inner">
-            <div class="project-lang-dot" style="--clr:#3572A5"></div>
-            <div class="project-header">
-              <div class="project-icon">🤖</div>
-              <div class="project-links">
-                <a href="https://github.com/seu-usuario/projeto-2" target="_blank" class="icon-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-              </div>
-            </div>
-            <h3 class="project-title">Projeto Python / IA</h3>
-            <p class="project-desc">Descrição do projeto. Destaque as funcionalidades principais e o impacto que ele tem.</p>
-            <div class="project-tech">
-              <span>Python</span><span>FastAPI</span><span>Docker</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card" data-delay="200">
-          <div class="project-card-inner">
-            <div class="project-lang-dot" style="--clr:#2196F3"></div>
-            <div class="project-header">
-              <div class="project-icon">🌐</div>
-              <div class="project-links">
-                <a href="https://github.com/seu-usuario/projeto-3" target="_blank" class="icon-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-              </div>
-            </div>
-            <h3 class="project-title">API REST / Microserviços</h3>
-            <p class="project-desc">Descreva a arquitetura e os desafios técnicos superados nesse projeto.</p>
-            <div class="project-tech">
-              <span>Node.js</span><span>MongoDB</span><span>JWT</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="project-card" data-delay="300">
-          <div class="project-card-inner">
-            <div class="project-lang-dot" style="--clr:#F05032"></div>
-            <div class="project-header">
-              <div class="project-icon">📊</div>
-              <div class="project-links">
-                <a href="https://github.com/seu-usuario/projeto-4" target="_blank" class="icon-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-              </div>
-            </div>
-            <h3 class="project-title">Dashboard Analytics</h3>
-            <p class="project-desc">Painel de dados em tempo real com gráficos interativos e relatórios automatizados.</p>
-            <div class="project-tech">
-              <span>React</span><span>D3.js</span><span>Redis</span>
-            </div>
-          </div>
-        </article>
-
-      </div>
-
+      <div class="projects-grid" id="projectsGrid"></div>
       <div class="projects-cta">
-        <a href="https://github.com/seu-usuario" target="_blank" class="btn btn-primary btn-lg">
+        <a id="githubAllBtn" href="#" target="_blank" class="btn btn-primary btn-lg">
           <svg viewBox="0 0 24 24" fill="currentColor" width="22"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           Ver todos no GitHub
         </a>
@@ -345,7 +126,7 @@
     </div>
   </section>
 
-  <!-- ───── OBJETIVOS ───── -->
+  <!-- OBJETIVOS -->
   <section class="section" id="goals">
     <div class="container">
       <div class="section-header">
@@ -353,67 +134,11 @@
         <h2 class="section-title">Onde quero chegar</h2>
         <p class="section-desc">Minha visão de carreira e os objetivos que estou perseguindo.</p>
       </div>
-
       <div class="goals-layout">
-        <div class="goals-timeline">
-          <div class="goal-item" data-delay="0">
-            <div class="goal-marker">
-              <div class="goal-dot"></div>
-              <div class="goal-line"></div>
-            </div>
-            <div class="goal-content">
-              <span class="goal-tag">Curto prazo</span>
-              <h3>Especialização em Cloud</h3>
-              <p>Aprofundar conhecimentos em AWS e arquitetura de microserviços, obtendo a certificação Solutions Architect.</p>
-            </div>
-          </div>
-          <div class="goal-item" data-delay="150">
-            <div class="goal-marker">
-              <div class="goal-dot"></div>
-              <div class="goal-line"></div>
-            </div>
-            <div class="goal-content">
-              <span class="goal-tag">Médio prazo</span>
-              <h3>Liderança Técnica</h3>
-              <p>Assumir papel de Tech Lead em projetos de grande escala, mentorando outros desenvolvedores.</p>
-            </div>
-          </div>
-          <div class="goal-item" data-delay="300">
-            <div class="goal-marker">
-              <div class="goal-dot"></div>
-              <div class="goal-line"></div>
-            </div>
-            <div class="goal-content">
-              <span class="goal-tag">Longo prazo</span>
-              <h3>Empreendedorismo Tech</h3>
-              <p>Criar uma startup de tecnologia com impacto social positivo, aplicando toda a experiência acumulada.</p>
-            </div>
-          </div>
-        </div>
-
+        <div class="goals-timeline" id="goalsTimeline"></div>
         <div class="goals-visual">
           <div class="radar-wrap">
-            <svg class="radar-chart" viewBox="0 0 240 240">
-              <defs>
-                <linearGradient id="radarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.4"/>
-                </linearGradient>
-              </defs>
-              <!-- Grid -->
-              <polygon points="120,30 210,90 210,170 120,210 30,170 30,90" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <polygon points="120,55 190,100 190,150 120,185 50,150 50,100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <polygon points="120,80 170,110 170,135 120,160 70,135 70,110" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <!-- Data -->
-              <polygon class="radar-data" points="120,45 198,95 195,160 120,200 55,155 48,92" fill="url(#radarGrad)" stroke="#2563eb" stroke-width="2"/>
-              <!-- Labels -->
-              <text x="120" y="22" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">Frontend</text>
-              <text x="220" y="90" text-anchor="start" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">Backend</text>
-              <text x="216" y="175" text-anchor="start" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">DevOps</text>
-              <text x="120" y="225" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">BD</text>
-              <text x="24" y="175" text-anchor="end" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">Cloud</text>
-              <text x="30" y="90" text-anchor="end" fill="rgba(255,255,255,0.7)" font-size="11" font-family="DM Sans">IA/ML</text>
-            </svg>
+            <svg class="radar-chart" viewBox="0 0 240 240" id="radarSvg"></svg>
             <div class="radar-label">Mapa de Competências</div>
           </div>
         </div>
@@ -421,7 +146,7 @@
     </div>
   </section>
 
-  <!-- ───── CERTIFICAÇÕES ───── -->
+  <!-- CERTIFICAÇÕES -->
   <section class="section section-dark" id="certifications">
     <div class="container">
       <div class="section-header">
@@ -429,120 +154,16 @@
         <h2 class="section-title">Credenciais Credly</h2>
         <p class="section-desc">Certificações verificadas e conquistas profissionais.</p>
       </div>
-
-      <div class="certs-grid">
-        <a href="https://www.credly.com/badges/SEU-BADGE-ID" target="_blank" class="cert-card" data-delay="0">
-          <div class="cert-badge-wrap">
-            <div class="cert-badge-img">
-              <svg viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="url(#awsGrad)" stroke="#f97316" stroke-width="2"/>
-                <text x="40" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Space Mono">AWS</text>
-                <text x="40" y="42" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">SOLUTIONS</text>
-                <text x="40" y="54" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">ARCHITECT</text>
-                <defs>
-                  <linearGradient id="awsGrad" x1="0" y1="0" x2="80" y2="80">
-                    <stop offset="0%" stop-color="#1a1a2e"/>
-                    <stop offset="100%" stop-color="#16213e"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div class="cert-verified">✓ Verificado</div>
-          </div>
-          <div class="cert-info">
-            <h3>AWS Solutions Architect</h3>
-            <p>Amazon Web Services</p>
-            <span class="cert-date">2024</span>
-          </div>
-          <div class="cert-arrow">→</div>
-        </a>
-
-        <a href="https://www.credly.com/badges/SEU-BADGE-ID-2" target="_blank" class="cert-card" data-delay="100">
-          <div class="cert-badge-wrap">
-            <div class="cert-badge-img">
-              <svg viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="url(#gcpGrad)" stroke="#4285f4" stroke-width="2"/>
-                <text x="40" y="36" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Space Mono">GCP</text>
-                <text x="40" y="50" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">ASSOCIATE</text>
-                <defs>
-                  <linearGradient id="gcpGrad" x1="0" y1="0" x2="80" y2="80">
-                    <stop offset="0%" stop-color="#0f172a"/>
-                    <stop offset="100%" stop-color="#1e1b4b"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div class="cert-verified">✓ Verificado</div>
-          </div>
-          <div class="cert-info">
-            <h3>Google Cloud Associate</h3>
-            <p>Google Cloud</p>
-            <span class="cert-date">2024</span>
-          </div>
-          <div class="cert-arrow">→</div>
-        </a>
-
-        <a href="https://www.credly.com/badges/SEU-BADGE-ID-3" target="_blank" class="cert-card" data-delay="200">
-          <div class="cert-badge-wrap">
-            <div class="cert-badge-img">
-              <svg viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="url(#ciscoGrad)" stroke="#1ba0d7" stroke-width="2"/>
-                <text x="40" y="36" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Space Mono">CCNA</text>
-                <text x="40" y="50" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">CISCO</text>
-                <defs>
-                  <linearGradient id="ciscoGrad" x1="0" y1="0" x2="80" y2="80">
-                    <stop offset="0%" stop-color="#0c1445"/>
-                    <stop offset="100%" stop-color="#1a2744"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div class="cert-verified">✓ Verificado</div>
-          </div>
-          <div class="cert-info">
-            <h3>CCNA — Networking</h3>
-            <p>Cisco</p>
-            <span class="cert-date">2023</span>
-          </div>
-          <div class="cert-arrow">→</div>
-        </a>
-
-        <a href="https://www.credly.com/badges/SEU-BADGE-ID-4" target="_blank" class="cert-card" data-delay="300">
-          <div class="cert-badge-wrap">
-            <div class="cert-badge-img">
-              <svg viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="url(#scrmGrad)" stroke="#7c3aed" stroke-width="2"/>
-                <text x="40" y="33" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="Space Mono">SCRUM</text>
-                <text x="40" y="46" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">MASTER</text>
-                <text x="40" y="59" text-anchor="middle" fill="white" font-size="7" font-family="Space Mono">PSM I</text>
-                <defs>
-                  <linearGradient id="scrmGrad" x1="0" y1="0" x2="80" y2="80">
-                    <stop offset="0%" stop-color="#1e0a3c"/>
-                    <stop offset="100%" stop-color="#2d1b5a"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-            <div class="cert-verified">✓ Verificado</div>
-          </div>
-          <div class="cert-info">
-            <h3>PSM I — Scrum Master</h3>
-            <p>Scrum.org</p>
-            <span class="cert-date">2023</span>
-          </div>
-          <div class="cert-arrow">→</div>
-        </a>
-      </div>
-
+      <div class="certs-grid" id="certsGrid"></div>
       <div class="certs-cta">
-        <a href="https://www.credly.com/users/seu-usuario" target="_blank" class="btn btn-outline">
+        <a id="credlyAllBtn" href="#" target="_blank" class="btn btn-outline">
           Ver todas as badges no Credly →
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ───── CONTATO ───── -->
+  <!-- CONTATO -->
   <section class="section contact-section" id="contact">
     <div class="contact-bg-orb"></div>
     <div class="container">
@@ -551,7 +172,6 @@
         <h2 class="section-title">Vamos conversar?</h2>
         <p class="section-desc">Aberto a oportunidades, colaborações e novos desafios.</p>
       </div>
-
       <div class="contact-layout">
         <div class="contact-info">
           <p class="contact-intro">
@@ -559,16 +179,14 @@
           </p>
           <div class="contact-email-display">
             <span class="email-label">Email</span>
-            <a href="mailto:seu@email.com" class="email-link" id="emailAddr">seu@email.com</a>
+            <a id="emailLink" href="#" class="email-link"></a>
           </div>
         </div>
-
         <div class="contact-buttons">
-          <a href="https://www.linkedin.com/in/seu-usuario" target="_blank" class="contact-btn linkedin-btn">
+
+          <a id="linkedinBtn" href="#" target="_blank" class="contact-btn linkedin-btn">
             <div class="contact-btn-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
             </div>
             <div class="contact-btn-text">
               <span class="contact-btn-label">LinkedIn</span>
@@ -577,7 +195,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" class="contact-btn-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
 
-          <a href="mailto:seu@email.com" class="contact-btn email-btn">
+          <a id="emailBtn" href="#" class="contact-btn email-btn">
             <div class="contact-btn-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -591,7 +209,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" class="contact-btn-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
 
-          <a href="https://github.com/seu-usuario" target="_blank" class="contact-btn github-btn">
+          <a id="githubBtn" href="#" target="_blank" class="contact-btn github-btn">
             <div class="contact-btn-icon">
               <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             </div>
@@ -601,18 +219,19 @@
             </div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" class="contact-btn-arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ───── FOOTER ───── -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
         <div class="footer-logo">
           <span class="logo-bracket">&lt;</span>
-          <span id="footerName">Dev</span>
+          <span id="footerName"></span>
           <span class="logo-bracket">/&gt;</span>
         </div>
         <p class="footer-text">Desenvolvido com 💙 · Hospedado na Vercel</p>
