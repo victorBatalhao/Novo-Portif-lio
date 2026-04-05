@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #161616;
+      --surface2:  #1e1e1e;
+      --surface3:  #252525;
+      --border:    #2a2a2a;
+      --border2:   #333;
+      --text:      #e8e8e8;
+      --text2:     #999;
+      --text3:     #666;
+      --accent:    #3b82f6;
+      --accent2:   #1d4ed8;
+      --accent-bg: rgba(59,130,246,0.08);
+      --green:     #22c55e;
+      --green-bg:  rgba(34,197,94,0.08);
+      --red:       #ef4444;
+      --red-bg:    rgba(239,68,68,0.08);
+      --amber:     #f59e0b;
+      --amber-bg:  rgba(245,158,11,0.08);
+      --radius:    8px;
+      --radius-lg: 12px;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo span {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .sidebar-logo p {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 3px;
+    }
+
+    .sidebar-nav { padding: 12px 8px; flex: 1; }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding: 8px 8px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text2);
+      transition: all 0.15s;
+      margin-bottom: 1px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: var(--accent-bg); color: var(--accent); }
+    .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text2);
+    }
+    .topbar-left strong { color: var(--text); font-weight: 500; font-size: 14px; }
+    .breadcrumb-sep { color: var(--text3); font-size: 12px; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid var(--border2);
+      background: var(--surface2);
+      color: var(--text);
+    }
+    .btn:hover { background: var(--surface3); border-color: #444; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+    .btn-danger {
+      background: var(--red-bg);
+      border-color: transparent;
+      color: var(--red);
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.15); }
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text2);
+    }
+    .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+    .btn-icon {
+      padding: 6px;
+      min-width: 30px;
+      justify-content: center;
+    }
+
+    /* ── CONTENT ── */
+    .content { padding: 28px 32px; max-width: 900px; }
+
+    /* ── SECTIONS ── */
+    .editor-section {
+      display: none;
+      animation: fadeSection 0.2s ease;
+    }
+    .editor-section.active { display: block; }
+    @keyframes fadeSection { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .section-desc {
+      font-size: 13px;
+      color: var(--text3);
+      margin-bottom: 24px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 14px; }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .field-row.trio { grid-template-columns: 1fr 1fr 1fr; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: 5px;
+    }
+    label .hint {
+      font-weight: 400;
+      color: var(--text3);
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 13px;
+      padding: 8px 11px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+    textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    select option { background: var(--surface2); }
+
+    input[type="color"] {
+      width: 44px; height: 34px;
+      padding: 2px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      cursor: pointer;
+    }
+
+    .color-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .color-field input[type="text"] { flex: 1; font-family: var(--mono); }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      height: 4px;
+    }
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .range-row label { margin: 0; min-width: 130px; }
+    .range-val {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* ── TOGGLE ── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-info { font-size: 13px; }
+    .toggle-info small { display: block; color: var(--text3); font-size: 11px; margin-top: 1px; }
+
+    .toggle {
+      position: relative;
+      width: 36px; height: 20px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+    }
+    .toggle input:checked + .toggle-track { background: var(--accent); }
+    .toggle input:checked + .toggle-track::after { transform: translateX(16px); }
+
+    /* ── TAGS / CHIPS ── */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-height: 42px;
+      align-items: flex-start;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      padding: 3px 8px 3px 10px;
+      font-size: 12px;
+      color: var(--text);
+      animation: chipIn 0.15s ease;
+    }
+    @keyframes chipIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+    .chip-del {
+      background: none;
+      border: none;
+      color: var(--text3);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.1s;
+    }
+    .chip-del:hover { color: var(--red); }
+    .chip-input {
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 12px;
+      color: var(--text);
+      font-family: var(--sans);
+      min-width: 80px;
+      flex: 1;
+      padding: 3px 4px;
+    }
+
+    /* ── REPEATER (lista dinâmica de itens) ── */
+    .repeater { display: flex; flex-direction: column; gap: 10px; }
+    .repeater-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      animation: chipIn 0.18s ease;
+    }
+    .repeater-header {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      cursor: pointer;
+      gap: 10px;
+    }
+    .repeater-header:hover { background: var(--surface3); }
+    .rep-index {
+      width: 22px; height: 22px;
+      background: var(--surface3);
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .rep-label { flex: 1; font-size: 13px; font-weight: 500; }
+    .rep-actions { display: flex; gap: 4px; }
+    .repeater-body {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .repeater-body.open { display: block; }
+
+    /* ── PROGRESS BAR (0–100 input) ── */
+    .pct-input-row {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pct-input-row input[type="number"] {
+      width: 60px;
+      text-align: center;
+      font-family: var(--mono);
+    }
+    .pct-bar-wrap {
+      flex: 1;
+      height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .pct-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+    /* ── OUTPUT ── */
+    .output-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .output-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-title { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+    .output-code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #a5f3fc;
+      padding: 16px;
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.6;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    /* ── TOAST ── */
+    .toast-wrap {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 999;
+    }
+    .toast {
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-size: 13px;
+      display: flex; align-items: center; gap: 8px;
+      animation: toastIn 0.2s ease;
+      min-width: 220px;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .toast.success { border-color: rgba(34,197,94,0.3); }
+    .toast.success .toast-dot { background: var(--green); }
+    .toast.error { border-color: rgba(239,68,68,0.3); }
+    .toast.error .toast-dot { background: var(--red); }
+    .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+    .badge-blue  { background: var(--accent-bg); color: var(--accent); }
+    .badge-green { background: var(--green-bg);  color: var(--green); }
+    .badge-amber { background: var(--amber-bg);  color: var(--amber); }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    /* ── CUSTOM FIELDS ── */
+    .custom-field-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      animation: chipIn 0.15s ease;
+    }
+    .custom-field-row > .field { flex: 1; margin: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .sidebar { display: none; }
+      .field-row, .field-row.trio { grid-template-columns: 1fr; }
+      .content { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span>&lt; portfolio.editor /&gt;</span>
+    <p>v2.0 · config.js generator</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Perfil</div>
+    <button class="nav-item active" onclick="goTo('profile', this)">
+      <span class="nav-dot"></span> Dados Pessoais
+    </button>
+    <button class="nav-item" onclick="goTo('contact', this)">
+      <span class="nav-dot"></span> Contato & Links
+    </button>
+
+    <div class="nav-section-label" style="margin-top:12px;">Conteúdo</div>
+    <button class="nav-item" onclick="goTo('skills', this)">
+      <span class="nav-dot"></span> Habilidades
+    </button>
+    <button class="nav-item" onclick="goTo('projects', this)">
+      <span class="nav-dot"></span> Projetos
+    </button>
+    <button class="nav-item" onclick="goTo('goals', this)">
+      <span class="nav-dot"></span> Objetivos
+    </button>
+    <button class="nav-item" onclick="goTo('certs', this)">
+      <span class="nav-dot"></span> Certificações
+    </button>
+
+    <div class="nav-section-label" style="margin-top:12px;">Aparência</div>
+    <button class="nav-item" onclick="goTo('theme', this)">
+      <span class="nav-dot"></span> Cores & Tema
+    </button>
+    <button class="nav-item" onclick="goTo('animations', this)">
+      <span class="nav-dot"></span> Animações
+    </button>
+    <button class="nav-item" onclick="goTo('custom', this)">
+      <span class="nav-dot"></span> Campos Extras
+    </button>
+
+    <div class="nav-section-label" style="margin-top:12px;">Exportar</div>
+    <button class="nav-item" onclick="goTo('export', this)">
+      <span class="nav-dot"></span> Gerar config.js
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="generateAndShow()">
+      Gerar config.js
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span>Portfolio Editor</span>
+      <span class="breadcrumb-sep">›</span>
+      <strong id="topbarTitle">Dados Pessoais</strong>
+    </div>
+    <div class="topbar-right">
+      <span class="badge badge-green" id="saveStatus">● salvo</span>
+      <button class="btn btn-sm" onclick="loadFromStorage()">↺ Restaurar</button>
+      <button class="btn btn-primary btn-sm" onclick="saveAll()">↓ Salvar</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ──────────────── PERFIL ──────────────── -->
+    <section class="editor-section active" id="sec-profile">
+      <div class="section-title">Dados Pessoais</div>
+      <div class="section-desc">Informações exibidas no card de perfil e seção hero.</div>
+
+      <div class="card">
+        <div class="card-title">Identidade</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="p_name" placeholder="Ex: João da Silva" />
+          </div>
+          <div class="field">
+            <label>Nome curto <span class="hint">navbar & footer</span></label>
+            <input type="text" id="p_shortName" placeholder="Ex: João" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Cargo / Título profissional</label>
+          <input type="text" id="p_title" placeholder="Ex: Desenvolvedor Full Stack · Especialista em TI" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Localização</label>
+            <input type="text" id="p_location" placeholder="Ex: Brasil · Remoto" />
+          </div>
+          <div class="field">
+            <label>Badge de status</label>
+            <input type="text" id="p_status" placeholder="Ex: Disponível para projetos" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Foto de perfil <span class="hint">nome do arquivo na pasta do projeto</span></label>
+          <input type="text" id="p_photo" placeholder="Ex: foto.jpg  |  deixe vazio para avatar padrão" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Estatísticas do card</div>
+        <div class="field-row trio">
+          <div class="field">
+            <label>Projetos</label>
+            <input type="number" id="p_statProjects" value="12" min="0" />
+          </div>
+          <div class="field">
+            <label>Certificações</label>
+            <input type="number" id="p_statCerts" value="8" min="0" />
+          </div>
+          <div class="field">
+            <label>Anos de experiência</label>
+            <input type="number" id="p_statYears" value="4" min="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Hero — texto principal</div>
+        <div class="field">
+          <label>Headline <span class="hint">aceita &lt;em&gt; para destaque em gradiente</span></label>
+          <input type="text" id="p_headline" placeholder="Transformando &lt;em&gt;ideias&lt;/em&gt; em soluções digitais" />
+        </div>
+        <div class="field">
+          <label>Subtítulo</label>
+          <textarea id="p_sub" placeholder="Apaixonado por tecnologia..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── CONTATO ──────────────── -->
+    <section class="editor-section" id="sec-contact">
+      <div class="section-title">Contato & Links</div>
+      <div class="section-desc">URLs usadas nos botões de contato e nav.</div>
+
+      <div class="card">
+        <div class="card-title">Redes & links</div>
+        <div class="field">
+          <label>GitHub</label>
+          <input type="url" id="l_github" placeholder="https://github.com/seu-usuario" />
+        </div>
+        <div class="field">
+          <label>LinkedIn</label>
+          <input type="url" id="l_linkedin" placeholder="https://www.linkedin.com/in/seu-usuario" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="l_email" placeholder="seu@email.com" />
+        </div>
+        <div class="field">
+          <label>Credly <span class="hint">página do seu perfil</span></label>
+          <input type="url" id="l_credly" placeholder="https://www.credly.com/users/seu-usuario" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ticker de tecnologias</div>
+        <div class="field">
+          <label>Techs <span class="hint">pressione Enter ou vírgula para adicionar</span></label>
+          <div class="chip-wrap" id="ticker-chips" onclick="document.getElementById('ticker-input').focus()">
+            <input class="chip-input" id="ticker-input" placeholder="Digite e pressione Enter..." />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── HABILIDADES ──────────────── -->
+    <section class="editor-section" id="sec-skills">
+      <div class="section-title">Habilidades Técnicas</div>
+      <div class="section-desc">Categorias com tags e barras de proficiência.</div>
+
+      <div id="skills-repeater" class="repeater"></div>
+      <button class="btn" onclick="addSkill()" style="margin-top:4px;">
+        + Adicionar categoria
+      </button>
+    </section>
+
+    <!-- ──────────────── PROJETOS ──────────────── -->
+    <section class="editor-section" id="sec-projects">
+      <div class="section-title">Projetos GitHub</div>
+      <div class="section-desc">Cards exibidos na seção de projetos.</div>
+
+      <div id="projects-repeater" class="repeater"></div>
+      <button class="btn" onclick="addProject()" style="margin-top:4px;">
+        + Adicionar projeto
+      </button>
+    </section>
+
+    <!-- ──────────────── OBJETIVOS ──────────────── -->
+    <section class="editor-section" id="sec-goals">
+      <div class="section-title">Objetivos de Carreira</div>
+      <div class="section-desc">Timeline exibida na seção Objetivos.</div>
+
+      <div id="goals-repeater" class="repeater"></div>
+      <button class="btn" onclick="addGoal()" style="margin-top:4px;">
+        + Adicionar objetivo
+      </button>
+    </section>
+
+    <!-- ──────────────── CERTIFICAÇÕES ──────────────── -->
+    <section class="editor-section" id="sec-certs">
+      <div class="section-title">Certificações Credly</div>
+      <div class="section-desc">Badges exibidos na seção de certificações.</div>
+
+      <div id="certs-repeater" class="repeater"></div>
+      <button class="btn" onclick="addCert()" style="margin-top:4px;">
+        + Adicionar certificação
+      </button>
+    </section>
+
+    <!-- ──────────────── CORES ──────────────── -->
+    <section class="editor-section" id="sec-theme">
+      <div class="section-title">Cores & Tema</div>
+      <div class="section-desc">Paleta de cores usada em todo o portfólio.</div>
+
+      <div class="card">
+        <div class="card-title">Cores principais</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Cor de fundo principal</label>
+            <div class="color-field">
+              <input type="color" id="c_bg" value="#0a0f1e" oninput="syncColor('c_bg','c_bg_hex')" />
+              <input type="text"  id="c_bg_hex" value="#0a0f1e" oninput="syncColorHex('c_bg_hex','c_bg')" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Fundo das seções escuras</label>
+            <div class="color-field">
+              <input type="color" id="c_dark" value="#030712" oninput="syncColor('c_dark','c_dark_hex')" />
+              <input type="text"  id="c_dark_hex" value="#030712" oninput="syncColorHex('c_dark_hex','c_dark')" />
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Azul principal (botões, CTAs)</label>
+            <div class="color-field">
+              <input type="color" id="c_blue600" value="#1d4ed8" oninput="syncColor('c_blue600','c_blue600_hex')" />
+              <input type="text"  id="c_blue600_hex" value="#1d4ed8" oninput="syncColorHex('c_blue600_hex','c_blue600')" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Azul hover / destaques</label>
+            <div class="color-field">
+              <input type="color" id="c_blue400" value="#3b82f6" oninput="syncColor('c_blue400','c_blue400_hex')" />
+              <input type="text"  id="c_blue400_hex" value="#3b82f6" oninput="syncColorHex('c_blue400_hex','c_blue400')" />
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Ciano — acentos e bordas animadas</label>
+            <div class="color-field">
+              <input type="color" id="c_cyan" value="#22d3ee" oninput="syncColor('c_cyan','c_cyan_hex')" />
+              <input type="text"  id="c_cyan_hex" value="#22d3ee" oninput="syncColorHex('c_cyan_hex','c_cyan')" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Cor do texto (principal)</label>
+            <div class="color-field">
+              <input type="color" id="c_text" value="#ffffff" oninput="syncColor('c_text','c_text_hex')" />
+              <input type="text"  id="c_text_hex" value="#ffffff" oninput="syncColorHex('c_text_hex','c_text')" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Banner do card de perfil</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Cor inicial (gradiente)</label>
+            <div class="color-field">
+              <input type="color" id="c_banner1" value="#1d4ed8" oninput="syncColor('c_banner1','c_banner1_hex')" />
+              <input type="text"  id="c_banner1_hex" value="#1d4ed8" oninput="syncColorHex('c_banner1_hex','c_banner1')" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Cor do meio</label>
+            <div class="color-field">
+              <input type="color" id="c_banner2" value="#0ea5e9" oninput="syncColor('c_banner2','c_banner2_hex')" />
+              <input type="text"  id="c_banner2_hex" value="#0ea5e9" oninput="syncColorHex('c_banner2_hex','c_banner2')" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Cor final</label>
+            <div class="color-field">
+              <input type="color" id="c_banner3" value="#7c3aed" oninput="syncColor('c_banner3','c_banner3_hex')" />
+              <input type="text"  id="c_banner3_hex" value="#7c3aed" oninput="syncColorHex('c_banner3_hex','c_banner3')" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── ANIMAÇÕES ──────────────── -->
+    <section class="editor-section" id="sec-animations">
+      <div class="section-title">Animações</div>
+      <div class="section-desc">Controle velocidade e intensidade das animações.</div>
+
+      <div class="card">
+        <div class="card-title">Velocidade</div>
+        <div class="range-row">
+          <label>Transição dos botões</label>
+          <input type="range" min="100" max="800" step="50" value="350" id="a_transition"
+            oninput="document.getElementById('a_transition_v').textContent=this.value+'ms'" />
+          <span class="range-val" id="a_transition_v">350ms</span>
+        </div>
+        <div class="range-row">
+          <label>Barras de habilidade</label>
+          <input type="range" min="300" max="2000" step="100" value="1200" id="a_skillbar"
+            oninput="document.getElementById('a_skillbar_v').textContent=this.value+'ms'" />
+          <span class="range-val" id="a_skillbar_v">1200ms</span>
+        </div>
+        <div class="range-row">
+          <label>Contador de estatísticas</label>
+          <input type="range" min="300" max="2000" step="100" value="1200" id="a_counter"
+            oninput="document.getElementById('a_counter_v').textContent=this.value+'ms'" />
+          <span class="range-val" id="a_counter_v">1200ms</span>
+        </div>
+        <div class="range-row">
+          <label>Ticker de tecnologias</label>
+          <input type="range" min="8" max="60" step="2" value="20" id="a_ticker"
+            oninput="document.getElementById('a_ticker_v').textContent=this.value+'s'" />
+          <span class="range-val" id="a_ticker_v">20s</span>
+        </div>
+        <div class="range-row">
+          <label>Orbs de fundo (hero)</label>
+          <input type="range" min="4" max="20" step="1" value="8" id="a_orbs"
+            oninput="document.getElementById('a_orbs_v').textContent=this.value+'s'" />
+          <span class="range-val" id="a_orbs_v">8s</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Ativar / desativar</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Cursor personalizado
+            <small>Substitui o cursor padrão no desktop</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_cursor" checked /><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Efeito ripple nos botões
+            <small>Onda ao clicar</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_ripple" checked /><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Tilt 3D nos cards
+            <small>Perspectiva ao mover o mouse</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_tilt" checked /><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Parallax nos orbs
+            <small>Orbs se movem ao rolar a página</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_parallax" checked /><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Scroll reveal
+            <small>Elementos aparecem ao rolar</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_reveal" checked /><span class="toggle-track"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            Grade de fundo no hero
+            <small>Grid sutil atrás do hero</small>
+          </div>
+          <label class="toggle"><input type="checkbox" id="a_grid" checked /><span class="toggle-track"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── CAMPOS EXTRAS ──────────────── -->
+    <section class="editor-section" id="sec-custom">
+      <div class="section-title">Campos Extras</div>
+      <div class="section-desc">Crie campos personalizados que serão adicionados ao config.js como <code style="font-family:var(--mono);font-size:12px;color:var(--accent);">custom: {}</code>.</div>
+
+      <div class="card">
+        <div class="card-title">
+          Campos personalizados
+          <span class="badge badge-amber" style="margin-left:8px;">Avançado</span>
+        </div>
+        <div id="custom-fields"></div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn btn-sm" onclick="addCustomField('text')">+ Texto</button>
+          <button class="btn btn-sm" onclick="addCustomField('url')">+ URL</button>
+          <button class="btn btn-sm" onclick="addCustomField('number')">+ Número</button>
+          <button class="btn btn-sm" onclick="addCustomField('toggle')">+ Boolean</button>
+          <button class="btn btn-sm" onclick="addCustomField('list')">+ Lista</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── EXPORTAR ──────────────── -->
+    <section class="editor-section" id="sec-export">
+      <div class="section-title">Gerar config.js</div>
+      <div class="section-desc">Revise e copie o conteúdo abaixo para substituir seu <code style="font-family:var(--mono);font-size:12px;color:var(--accent);">config.js</code>.</div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button class="btn btn-primary" onclick="generateAndShow()">↻ Gerar agora</button>
+        <button class="btn" onclick="copyOutput()">⎘ Copiar tudo</button>
+        <button class="btn" onclick="downloadConfig()">↓ Baixar config.js</button>
+      </div>
+
+      <div class="output-box">
+        <div class="output-topbar">
+          <span class="output-title">config.js</span>
+          <span class="badge badge-blue" id="outputBadge">pronto para copiar</span>
+        </div>
+        <pre class="output-code" id="outputCode">// Clique em "Gerar agora" para ver o código aqui.</pre>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══ ESTADO GLOBAL ═══ */
+const state = {
+  tickers: [],
+  skills: [],
+  projects: [],
+  goals: [],
+  certs: [],
+  customFields: [],
+};
+
+/* ═══ NAVEGAÇÃO ═══ */
+const sectionTitles = {
+  profile:'Dados Pessoais', contact:'Contato & Links',
+  skills:'Habilidades', projects:'Projetos',
+  goals:'Objetivos', certs:'Certificações',
+  theme:'Cores & Tema', animations:'Animações',
+  custom:'Campos Extras', export:'Gerar config.js',
+};
+function goTo(id, btn) {
+  document.querySelectorAll('.editor-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('topbarTitle').textContent = sectionTitles[id] || id;
+}
+
+/* ═══ TOAST ═══ */
+function toast(msg, type = 'success') {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span class="toast-dot"></span>${msg}`;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+/* ═══ CORES ═══ */
+function syncColor(colorId, hexId) {
+  document.getElementById(hexId).value = document.getElementById(colorId).value;
+}
+function syncColorHex(hexId, colorId) {
+  const val = document.getElementById(hexId).value;
+  if (/^#[0-9a-f]{6}$/i.test(val)) document.getElementById(colorId).value = val;
+}
+
+/* ═══ CHIP INPUT (ticker) ═══ */
+const tickerWrap  = document.getElementById('ticker-chips');
+const tickerInput = document.getElementById('ticker-input');
+tickerInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = tickerInput.value.replace(/,/g,'').trim();
+    if (val) { addChip(val); tickerInput.value = ''; }
+  }
+  if (e.key === 'Backspace' && !tickerInput.value) removeLastChip();
+});
+function addChip(val) {
+  state.tickers.push(val);
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.dataset.val = val;
+  chip.innerHTML = `${val}<button class="chip-del" onclick="removeChip(this)">×</button>`;
+  tickerWrap.insertBefore(chip, tickerInput);
+}
+function removeChip(btn) {
+  const chip = btn.parentElement;
+  state.tickers = state.tickers.filter(v => v !== chip.dataset.val);
+  chip.remove();
+}
+function removeLastChip() {
+  const chips = tickerWrap.querySelectorAll('.chip');
+  if (chips.length) chips[chips.length - 1].remove();
+  state.tickers.pop();
+}
+
+/* ═══ SKILL REPEATER ═══ */
+function addSkill(data = {}) {
+  const id = Date.now();
+  const idx = state.skills.length;
+  state.skills.push({ id, ...data });
+  const wrap = document.getElementById('skills-repeater');
+  const el = document.createElement('div');
+  el.className = 'repeater-item';
+  el.id = 'skill-' + id;
+  el.innerHTML = `
+    <div class="repeater-header" onclick="toggleRep('skill-body-${id}')">
+      <span class="rep-index">${idx + 1}</span>
+      <span class="rep-label" id="skill-label-${id}">${data.title || 'Nova categoria'}</span>
+      <div class="rep-actions">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();removeItem('skill-${id}',state.skills,${id})">✕</button>
+      </div>
+    </div>
+    <div class="repeater-body open" id="skill-body-${id}">
+      <div class="field-row">
+        <div class="field">
+          <label>Emoji / ícone</label>
+          <input type="text" id="sk_icon_${id}" value="${data.icon||''}" placeholder="⚡" style="width:80px;" />
+        </div>
+        <div class="field">
+          <label>Título da categoria</label>
+          <input type="text" id="sk_title_${id}" value="${data.title||''}" placeholder="Frontend"
+            oninput="document.getElementById('skill-label-${id}').textContent=this.value||'Nova categoria'" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Tags <span class="hint">Enter ou vírgula para adicionar</span></label>
+        <div class="chip-wrap" id="sk-chips-${id}" onclick="document.getElementById('sk-chip-input-${id}').focus()">
+          <input class="chip-input" id="sk-chip-input-${id}" placeholder="HTML5, React..." />
+        </div>
+      </div>
+      <div class="field">
+        <label>Barra 1 — nome</label>
+        <div class="field-row" style="margin:0;">
+          <input type="text" id="sk_b1n_${id}" value="${data.bars&&data.bars[0]?data.bars[0].label:''}" placeholder="React" />
+          <div class="pct-input-row">
+            <input type="number" id="sk_b1v_${id}" min="0" max="100" value="${data.bars&&data.bars[0]?data.bars[0].value:80}"
+              oninput="document.getElementById('sk_b1bar_${id}').style.width=this.value+'%'" />
+            <div class="pct-bar-wrap"><div class="pct-bar" id="sk_b1bar_${id}" style="width:${data.bars&&data.bars[0]?data.bars[0].value:80}%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Barra 2 — nome</label>
+        <div class="field-row" style="margin:0;">
+          <input type="text" id="sk_b2n_${id}" value="${data.bars&&data.bars[1]?data.bars[1].label:''}" placeholder="TypeScript" />
+          <div class="pct-input-row">
+            <input type="number" id="sk_b2v_${id}" min="0" max="100" value="${data.bars&&data.bars[1]?data.bars[1].value:70}"
+              oninput="document.getElementById('sk_b2bar_${id}').style.width=this.value+'%'" />
+            <div class="pct-bar-wrap"><div class="pct-bar" id="sk_b2bar_${id}" style="width:${data.bars&&data.bars[1]?data.bars[1].value:70}%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  wrap.appendChild(el);
+  initChipInput('sk-chips-' + id, 'sk-chip-input-' + id, id, 'skillTags');
+  if (data.tags) data.tags.forEach(t => addChipTo('sk-chips-' + id, 'sk-chip-input-' + id, t, id, 'skillTags'));
+}
+
+/* ═══ PROJECT REPEATER ═══ */
+function addProject(data = {}) {
+  const id = Date.now();
+  state.projects.push({ id, ...data });
+  const wrap = document.getElementById('projects-repeater');
+  const el = document.createElement('div');
+  el.className = 'repeater-item';
+  el.id = 'proj-' + id;
+  el.innerHTML = `
+    <div class="repeater-header" onclick="toggleRep('proj-body-${id}')">
+      <span class="rep-index">${state.projects.length}</span>
+      <span class="rep-label" id="proj-label-${id}">${data.title||'Novo projeto'}</span>
+      <div class="rep-actions">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();removeItem('proj-${id}',state.projects,${id})">✕</button>
+      </div>
+    </div>
+    <div class="repeater-body open" id="proj-body-${id}">
+      <div class="field-row">
+        <div class="field">
+          <label>Emoji / ícone</label>
+          <input type="text" id="pr_icon_${id}" value="${data.icon||''}" placeholder="📦" style="width:80px;" />
+        </div>
+        <div class="field">
+          <label>Título</label>
+          <input type="text" id="pr_title_${id}" value="${data.title||''}" placeholder="Meu Projeto"
+            oninput="document.getElementById('proj-label-${id}').textContent=this.value||'Novo projeto'" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <textarea id="pr_desc_${id}" placeholder="O que o projeto faz e qual problema resolve...">${data.desc||''}</textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>URL GitHub</label>
+          <input type="url" id="pr_gh_${id}" value="${data.github||''}" placeholder="https://github.com/..." />
+        </div>
+        <div class="field">
+          <label>URL Demo <span class="hint">opcional</span></label>
+          <input type="url" id="pr_demo_${id}" value="${data.demo||''}" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Cor da linguagem</label>
+          <div class="color-field">
+            <input type="color" id="pr_clr_${id}" value="${data.langColor||'#3b82f6'}"
+              oninput="document.getElementById('pr_clrhex_${id}').value=this.value" />
+            <input type="text" id="pr_clrhex_${id}" value="${data.langColor||'#3b82f6'}"
+              oninput="if(/^#[0-9a-f]{6}$/i.test(this.value))document.getElementById('pr_clr_${id}').value=this.value" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Projeto em destaque?</label>
+          <label class="toggle" style="margin-top:6px;">
+            <input type="checkbox" id="pr_feat_${id}" ${data.featured?'checked':''} />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Tech stack <span class="hint">Enter ou vírgula</span></label>
+        <div class="chip-wrap" id="pr-chips-${id}" onclick="document.getElementById('pr-chip-input-${id}').focus()">
+          <input class="chip-input" id="pr-chip-input-${id}" placeholder="React, Node.js..." />
+        </div>
+      </div>
+    </div>`;
+  wrap.appendChild(el);
+  initChipInput('pr-chips-' + id, 'pr-chip-input-' + id, id, 'projTech');
+  if (data.tech) data.tech.forEach(t => addChipTo('pr-chips-' + id, 'pr-chip-input-' + id, t, id, 'projTech'));
+}
+
+/* ═══ GOALS REPEATER ═══ */
+function addGoal(data = {}) {
+  const id = Date.now();
+  state.goals.push({ id, ...data });
+  const wrap = document.getElementById('goals-repeater');
+  const el = document.createElement('div');
+  el.className = 'repeater-item';
+  el.id = 'goal-' + id;
+  el.innerHTML = `
+    <div class="repeater-header" onclick="toggleRep('goal-body-${id}')">
+      <span class="rep-index">${state.goals.length}</span>
+      <span class="rep-label" id="goal-label-${id}">${data.title||'Novo objetivo'}</span>
+      <div class="rep-actions">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();removeItem('goal-${id}',state.goals,${id})">✕</button>
+      </div>
+    </div>
+    <div class="repeater-body open" id="goal-body-${id}">
+      <div class="field-row">
+        <div class="field">
+          <label>Tag / prazo</label>
+          <input type="text" id="gl_tag_${id}" value="${data.tag||''}" placeholder="Curto prazo" />
+        </div>
+        <div class="field">
+          <label>Título</label>
+          <input type="text" id="gl_title_${id}" value="${data.title||''}" placeholder="Especialização em Cloud"
+            oninput="document.getElementById('goal-label-${id}').textContent=this.value||'Novo objetivo'" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <textarea id="gl_desc_${id}" placeholder="Detalhe o objetivo...">${data.desc||''}</textarea>
+      </div>
+    </div>`;
+  wrap.appendChild(el);
+}
+
+/* ═══ CERT REPEATER ═══ */
+function addCert(data = {}) {
+  const id = Date.now();
+  state.certs.push({ id, ...data });
+  const wrap = document.getElementById('certs-repeater');
+  const el = document.createElement('div');
+  el.className = 'repeater-item';
+  el.id = 'cert-' + id;
+  el.innerHTML = `
+    <div class="repeater-header" onclick="toggleRep('cert-body-${id}')">
+      <span class="rep-index">${state.certs.length}</span>
+      <span class="rep-label" id="cert-label-${id}">${data.title||'Nova certificação'}</span>
+      <div class="rep-actions">
+        <button class="btn btn-ghost btn-icon btn-sm" onclick="event.stopPropagation();removeItem('cert-${id}',state.certs,${id})">✕</button>
+      </div>
+    </div>
+    <div class="repeater-body open" id="cert-body-${id}">
+      <div class="field-row">
+        <div class="field">
+          <label>Título</label>
+          <input type="text" id="ct_title_${id}" value="${data.title||''}" placeholder="AWS Solutions Architect"
+            oninput="document.getElementById('cert-label-${id}').textContent=this.value||'Nova certificação'" />
+        </div>
+        <div class="field">
+          <label>Emissor</label>
+          <input type="text" id="ct_issuer_${id}" value="${data.issuer||''}" placeholder="Amazon Web Services" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Ano</label>
+          <input type="text" id="ct_year_${id}" value="${data.year||''}" placeholder="2024" style="width:100px;" />
+        </div>
+        <div class="field">
+          <label>Cor de destaque</label>
+          <div class="color-field">
+            <input type="color" id="ct_clr_${id}" value="${data.accentColor||'#3b82f6'}"
+              oninput="document.getElementById('ct_clrhex_${id}').value=this.value" />
+            <input type="text" id="ct_clrhex_${id}" value="${data.accentColor||'#3b82f6'}"
+              oninput="if(/^#[0-9a-f]{6}$/i.test(this.value))document.getElementById('ct_clr_${id}').value=this.value" />
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>URL do badge no Credly</label>
+        <input type="url" id="ct_url_${id}" value="${data.badgeUrl||''}" placeholder="https://www.credly.com/badges/..." />
+      </div>
+      <div class="field">
+        <label>URL da imagem do badge <span class="hint">opcional — deixe vazio para SVG gerado</span></label>
+        <input type="url" id="ct_img_${id}" value="${data.badgeImg||''}" placeholder="https://images.credly.com/..." />
+      </div>
+      <div class="field">
+        <label>Linhas de texto no badge SVG <span class="hint">máx. 3, separadas por vírgula</span></label>
+        <input type="text" id="ct_lines_${id}" value="${data.lines?data.lines.join(', '):''}" placeholder="AWS, SOLUTIONS, ARCHITECT" />
+      </div>
+    </div>`;
+  wrap.appendChild(el);
+}
+
+/* ═══ CUSTOM FIELDS ═══ */
+let customCount = 0;
+function addCustomField(type) {
+  customCount++;
+  const id = 'cf_' + customCount;
+  state.customFields.push({ id, type });
+  const wrap = document.getElementById('custom-fields');
+  const el = document.createElement('div');
+  el.className = 'custom-field-row';
+  el.id = id;
+  const valueInput = type === 'toggle'
+    ? `<label class="toggle"><input type="checkbox" id="${id}_val"/><span class="toggle-track"></span></label>`
+    : type === 'list'
+    ? `<div class="chip-wrap" id="${id}_chips" onclick="document.getElementById('${id}_input').focus()"><input class="chip-input" id="${id}_input" placeholder="Enter ou vírgula..." /></div>`
+    : `<input type="${type === 'number' ? 'number' : type === 'url' ? 'url' : 'text'}" id="${id}_val" placeholder="Valor" />`;
+  el.innerHTML = `
+    <div class="field" style="flex:0.5;">
+      <label>Chave</label>
+      <input type="text" id="${id}_key" placeholder="minhaChave" style="font-family:var(--mono);" />
+    </div>
+    <div class="field" style="flex:0.8;">
+      <label>Tipo: <span class="badge badge-blue">${type}</span></label>
+      ${valueInput}
+    </div>
+    <button class="btn btn-danger btn-icon btn-sm" style="margin-top:18px;" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  wrap.appendChild(el);
+  if (type === 'list') initChipInput(id + '_chips', id + '_input', id, 'customList');
+}
+
+/* ═══ CHIP HELPERS ═══ */
+const chipStores = {};
+function initChipInput(wrapId, inputId, storeId, storeKey) {
+  chipStores[storeId + '_' + storeKey] = [];
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const val = input.value.replace(/,/g,'').trim();
+      if (val) { addChipTo(wrapId, inputId, val, storeId, storeKey); input.value = ''; }
+    }
+    if (e.key === 'Backspace' && !input.value) {
+      const arr = chipStores[storeId + '_' + storeKey];
+      if (arr.length) {
+        arr.pop();
+        const chips = document.getElementById(wrapId).querySelectorAll('.chip');
+        if (chips.length) chips[chips.length - 1].remove();
+      }
+    }
+  });
+}
+function addChipTo(wrapId, inputId, val, storeId, storeKey) {
+  const key = storeId + '_' + storeKey;
+  if (!chipStores[key]) chipStores[key] = [];
+  chipStores[key].push(val);
+  const wrap = document.getElementById(wrapId);
+  const input = document.getElementById(inputId);
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.dataset.val = val;
+  chip.innerHTML = `${val}<button class="chip-del" onclick="removeChipFrom('${wrapId}','${key}',this)">×</button>`;
+  wrap.insertBefore(chip, input);
+}
+function removeChipFrom(wrapId, key, btn) {
+  const chip = btn.parentElement;
+  if (chipStores[key]) chipStores[key] = chipStores[key].filter(v => v !== chip.dataset.val);
+  chip.remove();
+}
+function getChips(storeId, storeKey) {
+  return chipStores[storeId + '_' + storeKey] || [];
+}
+
+/* ═══ HELPERS ═══ */
+function toggleRep(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+function removeItem(domId, arr, id) {
+  document.getElementById(domId).remove();
+  const idx = arr.findIndex(i => i.id === id);
+  if (idx > -1) arr.splice(idx, 1);
+  toast('Item removido');
+}
+function gv(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function gc(id) { const el = document.getElementById(id); return el ? el.checked : false; }
+
+/* ═══ COLETAR DADOS ═══ */
+function collectAll() {
+  const skills = state.skills.map(s => ({
+    icon:  gv('sk_icon_'  + s.id),
+    title: gv('sk_title_' + s.id),
+    tags:  getChips(s.id, 'skillTags'),
+    bars: [
+      { label: gv('sk_b1n_' + s.id), value: parseInt(gv('sk_b1v_' + s.id)) || 0 },
+      { label: gv('sk_b2n_' + s.id), value: parseInt(gv('sk_b2v_' + s.id)) || 0 },
+    ].filter(b => b.label),
+  }));
+
+  const projects = state.projects.map(p => ({
+    icon:      gv('pr_icon_'  + p.id),
+    title:     gv('pr_title_' + p.id),
+    desc:      gv('pr_desc_'  + p.id),
+    github:    gv('pr_gh_'    + p.id),
+    demo:      gv('pr_demo_'  + p.id),
+    langColor: gv('pr_clrhex_'+ p.id),
+    featured:  gc('pr_feat_'  + p.id),
+    tech:      getChips(p.id, 'projTech'),
+  }));
+
+  const goals = state.goals.map(g => ({
+    tag:   gv('gl_tag_'   + g.id),
+    title: gv('gl_title_' + g.id),
+    desc:  gv('gl_desc_'  + g.id),
+  }));
+
+  const certs = state.certs.map(c => ({
+    title:       gv('ct_title_'  + c.id),
+    issuer:      gv('ct_issuer_' + c.id),
+    year:        gv('ct_year_'   + c.id),
+    badgeUrl:    gv('ct_url_'    + c.id),
+    badgeImg:    gv('ct_img_'    + c.id),
+    accentColor: gv('ct_clrhex_' + c.id),
+    lines:       gv('ct_lines_'  + c.id).split(',').map(s => s.trim()).filter(Boolean),
+  }));
+
+  const custom = {};
+  state.customFields.forEach(f => {
+    const key = gv(f.id + '_key').trim();
+    if (!key) return;
+    if (f.type === 'toggle') custom[key] = gc(f.id + '_val');
+    else if (f.type === 'list') custom[key] = getChips(f.id, 'customList');
+    else if (f.type === 'number') custom[key] = parseFloat(gv(f.id + '_val'));
+    else custom[key] = gv(f.id + '_val');
+  });
+
+  return {
+    profile: {
+      name:        gv('p_name'),
+      shortName:   gv('p_shortName'),
+      title:       gv('p_title'),
+      location:    gv('p_location'),
+      status:      gv('p_status'),
+      photo:       gv('p_photo'),
+      stats: {
+        projects:      parseInt(gv('p_statProjects')) || 0,
+        certifications:parseInt(gv('p_statCerts'))    || 0,
+        yearsExp:      parseInt(gv('p_statYears'))    || 0,
+      },
+      headline:    gv('p_headline'),
+      subheadline: gv('p_sub'),
+    },
+    links: {
+      github:   gv('l_github'),
+      linkedin: gv('l_linkedin'),
+      email:    gv('l_email'),
+      credly:   gv('l_credly'),
+    },
+    techTicker: state.tickers,
+    skills,
+    projects,
+    goals,
+    certifications: certs,
+    theme: {
+      bgPrimary:   gv('c_bg_hex'),
+      bgDark:      gv('c_dark_hex'),
+      blue600:     gv('c_blue600_hex'),
+      blue400:     gv('c_blue400_hex'),
+      cyan:        gv('c_cyan_hex'),
+      text:        gv('c_text_hex'),
+      bannerColor1:gv('c_banner1_hex'),
+      bannerColor2:gv('c_banner2_hex'),
+      bannerColor3:gv('c_banner3_hex'),
+    },
+    animations: {
+      transitionMs:  parseInt(gv('a_transition')),
+      skillbarMs:    parseInt(gv('a_skillbar')),
+      counterMs:     parseInt(gv('a_counter')),
+      tickerSec:     parseInt(gv('a_ticker')),
+      orbSec:        parseInt(gv('a_orbs')),
+      cursor:        gc('a_cursor'),
+      ripple:        gc('a_ripple'),
+      tilt3d:        gc('a_tilt'),
+      parallax:      gc('a_parallax'),
+      scrollReveal:  gc('a_reveal'),
+      heroGrid:      gc('a_grid'),
+    },
+    ...(Object.keys(custom).length ? { custom } : {}),
+  };
+}
+
+/* ═══ GERAR JS ═══ */
+function toJsValue(val, indent = 2) {
+  const pad = ' '.repeat(indent);
+  const pad2 = ' '.repeat(indent + 2);
+  if (val === null || val === undefined) return 'null';
+  if (typeof val === 'boolean') return String(val);
+  if (typeof val === 'number') return String(val);
+  if (typeof val === 'string') return JSON.stringify(val);
+  if (Array.isArray(val)) {
+    if (!val.length) return '[]';
+    const items = val.map(v => pad2 + toJsValue(v, indent + 2)).join(',\n');
+    return `[\n${items},\n${pad}]`;
+  }
+  const entries = Object.entries(val)
+    .map(([k, v]) => `${pad2}${k}: ${toJsValue(v, indent + 2)}`).join(',\n');
+  return `{\n${entries},\n${pad}}`;
+}
+
+function generateConfig(data) {
+  const entries = Object.entries(data)
+    .map(([k, v]) => `  ${k}: ${toJsValue(v, 2)}`)
+    .join(',\n\n');
+  return `/* ════════════════════════════════════════════════════════
+   ARQUIVO DE CONFIGURAÇÃO DO PORTFÓLIO
+   Gerado pelo Portfolio Editor
+   ════════════════════════════════════════════════════════ */\n\nconst PORTFOLIO_CONFIG = {\n\n${entries},\n\n};\n`;
+}
+
+function generateAndShow() {
+  const data = collectAll();
+  const code = generateConfig(data);
+  document.getElementById('outputCode').textContent = code;
+  document.getElementById('outputBadge').textContent = 'atualizado';
+  toast('config.js gerado com sucesso!');
+}
+
+function copyOutput() {
+  const code = document.getElementById('outputCode').textContent;
+  if (code.startsWith('//')) { toast('Gere o config.js primeiro', 'error'); return; }
+  navigator.clipboard.writeText(code).then(() => toast('Copiado para a área de transferência!'));
+}
+
+function downloadConfig() {
+  const code = document.getElementById('outputCode').textContent;
+  if (code.startsWith('//')) { generateAndShow(); }
+  setTimeout(() => {
+    const blob = new Blob([document.getElementById('outputCode').textContent], { type: 'text/javascript' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'config.js';
+    a.click();
+    toast('Download iniciado!');
+  }, 100);
+}
+
+/* ═══ SALVAR / RESTAURAR (localStorage) ═══ */
+function saveAll() {
+  const data = collectAll();
+  try {
+    localStorage.setItem('portfolio_editor_v2', JSON.stringify(data));
+    document.getElementById('saveStatus').textContent = '● salvo';
+    document.getElementById('saveStatus').className = 'badge badge-green';
+    toast('Dados salvos no navegador!');
+  } catch(e) {
+    toast('Erro ao salvar: ' + e.message, 'error');
+  }
+}
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem('portfolio_editor_v2');
+    if (!raw) { toast('Nenhum dado salvo encontrado', 'error'); return; }
+    const data = JSON.parse(raw);
+    applyData(data);
+    toast('Dados restaurados!');
+  } catch(e) {
+    toast('Erro ao restaurar: ' + e.message, 'error');
+  }
+}
+
+function applyData(d) {
+  if (!d) return;
+  const p = d.profile || {};
+  ['name','shortName','title','location','status','photo','headline'].forEach(k => {
+    const el = document.getElementById('p_' + k);
+    if (el) el.value = p[k] || '';
+  });
+  if (d.profile?.subheadline) document.getElementById('p_sub').value = p.subheadline || '';
+  if (p.stats) {
+    document.getElementById('p_statProjects').value = p.stats.projects || 0;
+    document.getElementById('p_statCerts').value    = p.stats.certifications || 0;
+    document.getElementById('p_statYears').value    = p.stats.yearsExp || 0;
+  }
+  const l = d.links || {};
+  ['github','linkedin','email','credly'].forEach(k => {
+    const el = document.getElementById('l_' + k);
+    if (el) el.value = l[k] || '';
+  });
+  if (d.techTicker) {
+    d.techTicker.forEach(t => addChip(t));
+    state.tickers = [...d.techTicker];
+  }
+  if (d.skills)         d.skills.forEach(s => addSkill(s));
+  if (d.projects)       d.projects.forEach(p => addProject(p));
+  if (d.goals)          d.goals.forEach(g => addGoal(g));
+  if (d.certifications) d.certifications.forEach(c => addCert(c));
+}
+
+/* ═══ AUTO-SALVAR STATUS ═══ */
+document.addEventListener('input', () => {
+  document.getElementById('saveStatus').textContent = '● não salvo';
+  document.getElementById('saveStatus').className = 'badge badge-amber';
+});
+
+/* ═══ INIT ═══ */
+(function init() {
+  const saved = localStorage.getItem('portfolio_editor_v2');
+  if (saved) {
+    try { applyData(JSON.parse(saved)); toast('Dados anteriores restaurados automaticamente'); }
+    catch(e) {}
+  }
+})();
+</script>
+</body>
+</html>
